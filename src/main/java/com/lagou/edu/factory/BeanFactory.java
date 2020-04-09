@@ -74,7 +74,7 @@ public class BeanFactory {
                 handleTransaction();
             }
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -146,7 +146,8 @@ public class BeanFactory {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            } catch (Error e) {
+            } catch (Error e1) {
+                e1.printStackTrace();
             }
         });
     }
@@ -179,16 +180,14 @@ public class BeanFactory {
                             field.setAccessible(true);
                             field.set(o, implObj);
                         } catch (Exception e) {
-                            e.printStackTrace();
-                            throw new RuntimeException("依赖注入失败");
+                            throw new RuntimeException("依赖注入失败", e);
                         }
                     });
             singletonObjects.put(beanName, o);
             singletonFactories.remove(beanName);
             return o;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("创建bean失败");
+            throw new RuntimeException("创建bean失败", e);
         }
     }
 
